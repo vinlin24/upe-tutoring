@@ -1,15 +1,9 @@
-# S23 COM SCI 111 Final Review
-
-Topics:
-
-> Concurrency, deadlocks, lock implementations, file systems, raid, security,
-> distributed systems (rpc, file transfer, remote disk access, remote file
-> systems)
-
-
-## Kahoot Questions
+# S23 COM SCI 111 Final Review Notes
 
 By Vincent Lin.
+
+
+## Kahoot Questions (with Explanations)
 
 
 ### Question 1
@@ -75,16 +69,18 @@ Public-key cryptography and journaling are irrelevant answers.
 
 Which of the following is true about DOS FAT file systems?
 
-* **CORRECT:** Is garbage-collected
-* Has significant external fragmentation
-* Has significant internal fragmentation
+* **CORRECT:** Free blocks are indicated in the file allocation table
+* Have significant external fragmentation
+* Have significant internal fragmentation
 * Can support sparse files
 
 <details open>
 <summary>Explanation</summary>
 
-Directory entries have a "live bit" to mark themselves for garbage collection
-when they're no longer in use.
+The essence of the FS is that the file allocation table (FAT) stores the number
+of the next cluster of the file it's a part of.  If a cluster is not part of any
+file (i.e. is *free*), this is indicated by a special value in its FAT entry,
+conventionally the number 0.
 
 As is generally true for any "block"-based strategy, there is limited
 fragmentation.  There is zero external fragmentation because the space is
@@ -100,67 +96,12 @@ of file clusters, without the help of some kind of metadata, it's difficult to
 mark clusters in the middle as unallocated because doing so would disconnect the
 list.
 
-</details>
-
-
-### Question 4
-
-Which of the following is the best definition for "livelock"?
-
-* A safe allocation state
-* **CORRECT:** Not blocked, but unable to make progress
-* Available for locking
-* Continuing to execute with a locked resource
-
-
-<details open>
-<summary>Explanation</summary>
-
-Livelock is different from deadlock in that the afflicted processes/threads are
-still "alive" (not sleeping), but aren't achieving any useful work because
-they're just continuously changing state like passing a lock around.  An example
-of when this can happen is when there are excessive interrupts.  Using polling
-over interrupts is a solution to preventing livelock.
-
-*This question was from a previous 111 Reiher final (S20).*
+Also: https://web.cs.ucla.edu/classes/spring23/cs111/readings/FAT_files/dos.html
 
 </details>
 
 
-### Question 5
-
-Which of the following are reasons why direct-mapped is a bad approach to
-implementing a flash translation later (FTL)?
-
-* **CORRECT:** Poor wear leveling
-* High performance penalties for garbage collection
-* Severe read amplification
-* **CORRECT:** Severe write amplification
-
-<details open>
-<summary>Explanation</summary>
-
-Direct-mapped is a bad idea for FTL for both reliability and performance
-reasons.  Firstly, it's easy to have repeated writes to the same page, which
-wears out the block - remember flash can only be erased and reprogrammed a
-finite number of times before 1s and 0s start to become indistinguishable,
-potentially losing data.
-
-In terms of performance, there's severe write amplification because due to how
-flash works, every write to a page must incur an erase of the entire enclosing
-block before reprogramming the page.
-
-There is no significant effect of direct-mapped on garbage collection, and
-reading from a page doesn't cause any amplification.
-
-*This was paraphrased from a question in a previous 111 Reiher final (S20).*
-
-*Explanation can be found in 44.6 of OSTEP.*
-
-</details>
-
-
-### Question 6
+### Question 4 (formerly Question 6)
 
 Which of the following is a way(s) to reduce resource contention?
 
@@ -188,7 +129,7 @@ bucket their own lock.
 </details>
 
 
-### Question 7
+### Question 5 (formerly Question 7)
 
 *Might want to extend the time for this question.*
 
@@ -241,7 +182,7 @@ has a complete transaction that wasn't garbage collected, so we can just
 </details>
 
 
-### Question 8
+### Question 6 (formerly Question 8)
 
 Fill in the blank to make this joke make sense:
 
@@ -267,7 +208,7 @@ The other answers don't really make the joke applicable.
 </details>
 
 
-### Question 9
+### Question 7 (formerly Question 9)
 
 Which of the following is true of direct memory access (DMA)?
 
@@ -295,12 +236,12 @@ out of a transfer.  This is better compared to memory-mapped I/O, which has a
 cost for *each* memory access and is better suited for lower bandwidth
 operations.
 
-*Also see: question 38 in past 111 Reiher final (S20).*
+<!-- *Also see: question 38 in past 111 Reiher final (S20).* -->
 
 </details>
 
 
-### Question 10
+### Question 8 (formerly Question 10)
 
 How are Unix file systems capable of supporting massive files when needed?
 
@@ -326,7 +267,7 @@ support massive files with fixed sized inodes/blocks, and only as needed.
 </details>
 
 
-### Question 11
+### Question 9 (formerly Question 11)
 
 *A fun freebie!*
 
@@ -335,7 +276,7 @@ give out "Moderator" by default as that lets users bypass all other permission
 checks.  You agree, so you grant specific permissions, like "Manage Messages"
 and "Manage Channels", but NOT ones like "Manage Server" and "Manage Roles".
 The Discord permission system seems to exhibit which of these security
-principles?
+principles? (multiple answers)
 
 * **CORRECT:** Separation of privilege
 * **CORRECT:** Fail-safe defaults
@@ -372,7 +313,7 @@ even if they don't have access to the admin control panel.
 </details>
 
 
-### Question 12
+### Question 10 (formerly Question 12)
 
 Which of the following is true about threading?
 
@@ -406,7 +347,7 @@ better use of the shared cache.
 </details>
 
 
-### Question 13
+### Question 11 (formerly Question 13)
 
 Which of the following is the best solution to preventing order violation
 errors?
@@ -434,32 +375,7 @@ for other problems:
 </details>
 
 
-### Question 14
-
-A distributed system is built upon coordinating many machines.  Improving the
-specs of a machine(s) would be an example of ____ while adding more machines
-would be an example of ____.
-
-* **CORRECT:** vertical scaling, horizontal scaling
-* horizontal scaling, vertical scaling
-* loose coupling, cloud computing
-* cloud computing, loose coupling
-
-<details open>
-<summary>Explanation</summary>
-
-There are two "dimensions" on which a distributed system can scale.  Vertical
-scaling is when you improve the existing resources.  Horizontal scaling is when
-you add more (independently working) resources to the system.
-
-Loose coupling and cloud computing are specific *paradigms* of distributed
-systems and do not make sense in the provided blanks.  Vertical and horizontal
-scaling are relevant topics to both and to distributed systems in general.
-
-</details>
-
-
-### Question 15
+### Question 12 (formerly Question 15)
 
 Which type of Client/Server model does this sound like? No set server, each node
 can potentially act as a client or server.
@@ -489,7 +405,7 @@ I randomly threw in AFS for a 4th option.  It doesn't even make sense.
 </details>
 
 
-### Question 16
+### Question 13 (formerly Question 16)
 
 Consider this definition for some data structure.  What kind of synchronization
 primitive does this likely represent?
@@ -536,7 +452,7 @@ The author provides a custom implementation of a semaphore called a "zemaphore".
 </details>
 
 
-### Question 17
+### Question 14 (formerly Question 17)
 
 Which of the following is NOT an advantage of using RAID over a single disk?
 
@@ -569,7 +485,7 @@ particular workload is challenging...
 </details>
 
 
-### Question 18
+### Question 15 (formerly Question 18)
 
 What is the purpose of a password salt?
 
@@ -599,7 +515,7 @@ The "strength" of a cryptographic hashing algorithm isn't relevant here.
 </details>
 
 
-### Question 19
+### Question 16 (formerly Question 19)
 
 Which of the following is NOT true about remote data access?
 
@@ -642,34 +558,5 @@ the UPE W23 111 final review slides:
 >   - Inefficient fixed partition space allocation
 >   - Can’t support file sharing amongst clients
 >   - Message losses due to network errors become file system errors
-
-</details>
-
-
-### Question 20
-
-Which of these problems can be solved effectively with Map-Reduce?
-
-* **CORRECT:** Counting the occurrences of words in a large body of text
-* **CORRECT:** Performing the same image transformation on a large set of images
-* Running an iterative graph algorithm
-* Real-time content recommendation algorithm
-
-
-<details open>
-<summary>Explanation</summary>
-
-Problems suited for Map-Reduce are ones that can be easily divided into
-independent subtasks and merged back together after computing.
-
-These are usually characterized by large data sets or a data set that can be
-divided into one, where each unit in the set does not affect the other in terms
-of the final computation.  Counting problems are classic examples of this, and
-so is applying some kind of search/transformation.
-
-Real-time or interactive algorithms are not well-suited for the batch nature of
-Map-Reduce, and algorithms that depend on the entire problem (like graph
-algorithms) don't do well either because there isn't a good way to divide it up
-without breaking the problem.
 
 </details>
